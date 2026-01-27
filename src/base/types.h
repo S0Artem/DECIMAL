@@ -1,5 +1,5 @@
-#ifndef TIPES_H
-#define TIPES_H
+#ifndef DECIMAL_BASE_TIPES_H_
+#define DECIMAL_BASE_TIPES_H_
 
 typedef enum { S21_POSITIVE = 0, S21_NEGATIVE = 1 } s21_decimal_sign;
 
@@ -17,4 +17,4 @@ typedef union {
   } parts;
 } decimal_bit3;
 
-#endif
+#endif // DECIMAL_BASE_TIPES_H_

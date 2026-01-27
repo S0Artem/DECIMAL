@@ -1,17 +1,22 @@
-#include <./hel_def.h>
+#include "helper/helper.h"
+
 #include <stdio.h>
 
+#include "base/types.h"
+
+static inline int s21_decimal_get_empty2(const s21_decimal *value);
+static inline int s21_decimal_get_empty1(const s21_decimal *value);
+
 /**
- * проверка decimal в правильности
+ * проверка decimal в правильности  
  */
 int s21_is_correct_decimal(s21_decimal decimal) {
   int code = 1;
-
-  if (s21_decimal_get_empty1(decimal) != 0 ||
-      s21_decimal_get_empty2(decimal) != 0)
+  if (s21_decimal_get_empty1(&decimal) != 0 ||
+      s21_decimal_get_empty2(&decimal) != 0)
     code = 0;
   else {
-    int power = s21_decimal_get_power(decimal);
+    int power = s21_decimal_get_power(&decimal);
     if (power < 0 || power > 28) code = 0;
   }
   return code;
@@ -20,7 +25,7 @@ int s21_is_correct_decimal(s21_decimal decimal) {
 /**
  * Заполнение быиты числа bits из строки str
  */
-int s21_decimal_set_bits_from_string(int *bits, char *str) {
+int s21_decimal_set_bits_from_string(int *bits, const char *str) {
   int index = 0;
   int error = 0;
   int len = (int)strlen(str);
@@ -39,8 +44,8 @@ int s21_decimal_set_bits_from_string(int *bits, char *str) {
 /**
  * Заполняет decimal строками
  */
-s21_decimal s21_decimal_form_streings(char *str1, char *str2, char *str3,
-                                      char *str4) {
+s21_decimal s21_decimal_form_streings(const char *str1, const char *str2, const char *str3,
+                                    const char *str4) {
   s21_decimal result;
   int error = 0;
   error = s21_decimal_set_bits_from_string(&result.bits[0], str1);
@@ -68,36 +73,36 @@ s21_decimal s21_decimal_form_streings(char *str1, char *str2, char *str3,
 /**
  * возвращает значение битов с 24 по 30 в bits[3]
  */
-int s21_decimal_get_empty1(s21_decimal value) {
+static inline int s21_decimal_get_empty1(const s21_decimal *value) {
   decimal_bit3 result;
-  result.i = value.bits[3];
+  result.i = value->bits[3];
   return result.parts.empty1;
 }
 
 /**
  * возвращает значение битов с 0 по 15 в bits[3]
  */
-int s21_decimal_get_empty2(s21_decimal value) {
+static inline int s21_decimal_get_empty2(const s21_decimal *value) {
   decimal_bit3 result;
-  result.i = value.bits[3];
+  result.i = value->bits[3];
   return result.parts.empty2;
 }
 
 /**
  * возрщает значени знака
  */
-int s21_decimal_get_sign(s21_decimal value) {
+int s21_decimal_get_sign(const s21_decimal *value) {
   decimal_bit3 result;
-  result.i = value.bits[3];
+  result.i = value->bits[3];
   return result.parts.sign;
 }
 
 /**
  * возрщает значени тепени
  */
-int s21_decimal_get_power(s21_decimal value) {
+int s21_decimal_get_power(const s21_decimal *value) {
   decimal_bit3 result;
-  result.i = value.bits[3];
+  result.i = value->bits[3];
   return result.parts.power;
 }
 
@@ -136,9 +141,9 @@ int s21_decimal_set_sign(s21_decimal *value, int sign) {
   int error = 0;
   decimal_bit3 bits3;
   bits3.i = value->bits[3];
-  if (sign = S21_POSITIVE) {
+  if (sign == S21_POSITIVE) {
     bits3.parts.sign = S21_POSITIVE;
-  } else if (sign = S21_NEGATIVE) {
+  } else if (sign == S21_NEGATIVE) {
     bits3.parts.sign = S21_NEGATIVE;
   } else {
     error = 1;
