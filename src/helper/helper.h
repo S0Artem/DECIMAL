@@ -3,7 +3,7 @@
 
 #include "base/types.h"
 
-int s21_is_correct_decimal(s21_decimal decimal);
+int s21_is_correct_decimal(const s21_decimal decimal);
 int s21_decimal_set_bits_from_string(int *bits, const char *str);
 s21_decimal s21_decimal_form_streings(const char *str1, const char *str2, const char *str3,
                                     const char *str4);

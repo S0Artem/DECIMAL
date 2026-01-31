@@ -1,6 +1,7 @@
 #include "helper/helper.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #include "base/types.h"
 
@@ -10,7 +11,7 @@ static inline int s21_decimal_get_empty1(const s21_decimal *value);
 /**
  * проверка decimal в правильности  
  */
-int s21_is_correct_decimal(s21_decimal decimal) {
+int s21_is_correct_decimal(const s21_decimal decimal) {
   int code = 1;
   if (s21_decimal_get_empty1(&decimal) != 0 ||
       s21_decimal_get_empty2(&decimal) != 0)
@@ -64,7 +65,7 @@ s21_decimal s21_decimal_form_streings(const char *str1, const char *str2, const 
 
   if (error == 1) {
     s21_decimal_clear(&result);
-    printf(stderr, "Предупреждение: ошибка в заполнении decimal строками");
+    fprintf(stderr, "Предупреждение: ошибка в заполнении decimal строками");
   }
 
   return result;
@@ -125,7 +126,7 @@ s21_decimal s21_decimal_from_array(int value1, int value2, int value3, int sign,
   }
   if (error == 1) {
     s21_decimal_clear(&result);
-    printf(stderr,
+    fprintf(stderr,
            "Предупреждение: ошибка в записи знака %i или в записи степени %i в "
            "s21_decimal_from_array.\n",
            sign, power);
