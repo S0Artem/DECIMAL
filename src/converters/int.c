@@ -9,9 +9,7 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst);
 
 int main(int argc, char const *argv[])
 {
-    printf("Введите число от -2,147,483,648 до 2147483647 то есть int: ");
-    int number_int;
-    scanf("%i", &number_int);
+    int number_int = 2567;
     s21_decimal number_decimal;
     if(s21_from_int_to_decimal(number_int, &number_decimal) != 1){
         printf("%c%u\n", 
