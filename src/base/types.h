@@ -4,7 +4,7 @@
 typedef enum { S21_POSITIVE = 0, S21_NEGATIVE = 1 } s21_decimal_sign;
 
 typedef struct {
-  int bits[4];
+  unsigned int bits[4];
 } s21_decimal;
 
 typedef union {

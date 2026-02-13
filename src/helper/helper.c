@@ -29,23 +29,36 @@ int s21_is_correct_decimal(const s21_decimal decimal) {
 int s21_decimal_set_bits_from_string(int *bits, const char *str) {
   int index = 0;
   int error = 0;
-  int len = (int)strlen(str);
-  for (int i = len - 1; i >= 0 && error == 0; i--) {
-    if (str[i] == ' ') {
-      continue;
-    } else if (str[i] == '0' || str[i] == '1') {
-      bits[index] = str[i];
-    } else {
-      error = 1;
+
+  for (int i = (int)strlen(str) - 1; i >= 0; i--) {
+      if (str[i] == ' ') {
+        continue;
+      } else if (str[i] == '1') {
+        *bits = s21_set_bit(*bits, index);
+      } else if (str[i] == '0') {
+        *bits = s21_reset_bit(*bits, index);
+      } else {
+        error = 1;
+        break;
+      }
+      ++index;
     }
-  }
-  return error;
+
+    return error;
+}
+
+// TODO разобраться до конца все еще(6 день игнорю уже, захожу под конец дня)
+int s21_set_bit(int number, int index) {
+    return number | (1U << index);
+}
+int s21_reset_bit(int number, int index) {
+    return number & ~(1U << index);
 }
 
 /**
  * Заполняет decimal строками
  */
-s21_decimal s21_decimal_form_streings(const char *str1, const char *str2, const char *str3,
+s21_decimal s21_decimal_from_strings(const char *str1, const char *str2, const char *str3,
                                     const char *str4) {
   s21_decimal result;
   int error = 0;
@@ -65,7 +78,7 @@ s21_decimal s21_decimal_form_streings(const char *str1, const char *str2, const 
 
   if (error == 1) {
     s21_decimal_clear(&result);
-    fprintf(stderr, "Предупреждение: ошибка в заполнении decimal строками");
+    fprintf(stderr, "Предупреждение: ошибка в заполнении decimal строками\n");
   }
 
   return result;
@@ -150,6 +163,10 @@ int s21_decimal_set_sign(s21_decimal *value, int sign) {
     error = 1;
   }
 
+  if (error == 0) {
+    value->bits[3] = bits3.i;
+  }
+
   return error;
 }
 
@@ -162,8 +179,14 @@ int s21_decimal_set_power(s21_decimal *value, int power) {
   bits3.i = value->bits[3];
   if (power > -1 && power < 9) {
     bits3.parts.power = power;
-  } else
+  } else {
     error = 1;
+  }
+   
+  if (error == 0) {
+    value->bits[3] = bits3.i;
+  }
+
   return error;
 }
 
@@ -194,4 +217,15 @@ s21_decimal s21_decimal_get_one(void) {
   s21_decimal_clear(&result);
   result.bits[0] = 1;
   return result;
+}
+
+/**
+ * возведение в степень целых числе
+ */
+int s21_pow_int(int base, int exp) {
+    int result = 1;
+    for (int i = 0; i < exp; i++) {
+        result *= base;
+    }
+    return result;
 }
